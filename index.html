@@ -917,7 +917,8 @@ const S = {
 /* ---------- аудио -------------------------------------------------------- */
 let ctx = null, gMet = null, gTrk = null, clickBus = null, noiseBuf = null, srcNode = null;
 // Piper LJSpeech, https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/ljspeech/medium
-let voiceBuffer = null;
+let voiceWords = null;
+const shortVoiceWords = new Map();
 const VOICE_SOUND = 'voice-en';
 const VOICE_SLOT = .64;
 const AND_WORD = 16;
@@ -961,35 +962,109 @@ function resetClickBus() {
 }
 
 async function loadVoice() {
-  if (voiceBuffer) return;
+  if (voiceWords) return;
   const response = await fetch('voices/count-en-and.m4a');
   if (!response.ok) throw new Error('Не удалось загрузить голосовой счёт');
-  voiceBuffer = await ctx.decodeAudioData(await response.arrayBuffer());
+  const decoded = await ctx.decodeAudioData(await response.arrayBuffer());
+  const pcm = decoded.getChannelData(0);
+  const sr = decoded.sampleRate;
+  voiceWords = Array.from({ length: AND_WORD + 1 }, (_, word) => {
+    const start = Math.round(word * VOICE_SLOT * sr);
+    const end = Math.min(pcm.length, start + Math.round((word === AND_WORD ? .34 : .5) * sr));
+    let last = end - 1;
+    while (last > start && Math.abs(pcm[last]) < .008) last--;
+    const clip = pcm.subarray(start, Math.min(end, last + Math.round(.012 * sr)));
+    const buffer = ctx.createBuffer(1, clip.length, sr);
+    buffer.copyToChannel(clip, 0);
+    return buffer;
+  });
+}
+
+// WSOLA: сокращаем паузу между фрагментами, сохраняя скорость самой волны.
+function shortenVoice(input, frames, sampleRate) {
+  const output = new Float32Array(frames);
+  const window = Math.min(Math.floor(frames / 2), Math.round(.032 * sampleRate));
+  const transitions = Math.ceil((frames - window) / (window / 2));
+  const radius = Math.round(.008 * sampleRate);
+  const sampleStep = Math.max(1, Math.round(sampleRate / 8000));
+  const searchStep = Math.max(1, Math.round(sampleRate / 4000));
+  const lastInput = input.length - window;
+  const lastOutput = frames - window;
+  output.set(input.subarray(0, window));
+
+  let previousOut = 0, previousIn = 0;
+  for (let i = 1; i <= transitions; i++) {
+    const out = Math.round(lastOutput * i / transitions);
+    const overlap = previousOut + window - out;
+    const expected = Math.round(lastInput * i / transitions);
+    let best = expected;
+    if (i < transitions) {
+      const first = Math.max(previousIn + 1, expected - radius);
+      const last = Math.min(lastInput, expected + radius);
+      let bestScore = -Infinity;
+      let referencePower = 0;
+      for (let j = 0; j < overlap; j += sampleStep) referencePower += output[out + j] ** 2;
+      for (let candidate = first; candidate <= last; candidate += searchStep) {
+        let sum = 0, power = 0;
+        for (let j = 0; j < overlap; j += sampleStep) {
+          const sample = input[candidate + j];
+          sum += sample * output[out + j];
+          power += sample ** 2;
+        }
+        const score = sum / Math.sqrt(referencePower * power + 1e-10) -
+          .12 * Math.abs(candidate - expected) / radius;
+        if (score > bestScore) { best = candidate; bestScore = score; }
+      }
+    }
+    for (let j = 0; j < overlap; j++) {
+      const mix = (j + 1) / overlap;
+      output[out + j] = output[out + j] * (1 - mix) + input[best + j] * mix;
+    }
+    output.set(input.subarray(best + overlap, best + window), out + overlap);
+    previousOut = out;
+    previousIn = best;
+  }
+  return output;
+}
+
+function voiceForGap(word, gap) {
+  const original = voiceWords[word];
+  const sr = original.sampleRate;
+  const available = gap * .96;
+  if (original.duration <= available) return original;
+  const quantum = Math.round(.004 * sr);
+  const frames = Math.floor(available * sr / quantum) * quantum;
+  const key = word + ':' + frames;
+  if (shortVoiceWords.has(key)) return shortVoiceWords.get(key);
+
+  const pcm = shortenVoice(original.getChannelData(0), frames, sr);
+  const shorter = ctx.createBuffer(1, frames, sr);
+  shorter.copyToChannel(pcm, 0);
+  if (shortVoiceWords.size >= 128) shortVoiceWords.delete(shortVoiceWords.keys().next().value);
+  shortVoiceWords.set(key, shorter);
+  return shorter;
 }
 
 function speakBeat(time, level, word, gap) {
   const source = ctx.createBufferSource();
-  source.buffer = voiceBuffer;
-  const wordLength = word === AND_WORD ? .34 : .5;
-  const rate = clamp(wordLength / (gap * .96), 1, 2.8);
-  const duration = Math.min(wordLength / rate, gap * .96);
+  source.buffer = voiceForGap(word, gap);
+  const duration = source.buffer.duration;
   const env = ctx.createGain();
   const gain = level === 3 ? 1.4 : level === 2 ? 1.25 : 1.35 * S.subVol ** .35;
   const fade = Math.min(.008, duration / 3);
   env.gain.setValueAtTime(gain, time);
   env.gain.setValueAtTime(gain, time + duration - fade);
   env.gain.linearRampToValueAtTime(0, time + duration);
-  source.playbackRate.value = rate;
   source.connect(env).connect(clickBus);
-  source.start(time, word * VOICE_SLOT, duration * rate);
+  source.start(time);
 }
 
 /* level: 3 акцент, 2 доля, 1 слабая */
-function click(time, level, countBeat = null, beatSec = .64) {
+function click(time, level, countBeat = null, voiceGap = .64) {
   if (!ctx || level < 1) return;
   const t = Math.max(time, ctx.currentTime);
-  if (countBeat != null && S.sound === VOICE_SOUND && voiceBuffer) {
-    speakBeat(t, level, countBeat, beatSec);
+  if (countBeat != null && S.sound === VOICE_SOUND && voiceWords && voiceGap >= .025) {
+    speakBeat(t, level, countBeat, voiceGap);
     return;
   }
   const kind = S.sound === VOICE_SOUND ? 'wood' : S.sound;
@@ -1106,13 +1181,17 @@ function barEvents(seg) {
 function playbackEvents(seg) {
   const events = barEvents(seg);
   if (events[0].t > 0) events.unshift({ t: 0, lv: 0, sub: false });
-  if (S.sound !== VOICE_SOUND || !voiceBuffer) return events;
-  return events.map((event, index) => {
-    if (event.sub && !event.and) return event;
-    const countBeat = event.and ? AND_WORD : Math.round(event.t);
-    const next = events[index + 1]?.t ?? seg.num;
-    return { ...event, countBeat, wordGap: next - event.t };
-  });
+  if (S.sound !== VOICE_SOUND || !voiceWords) return events;
+  // Слабые щелчки продолжают пульсацию, пока звучит слово.
+  let nextWord = seg.num;
+  for (let i = events.length - 1; i >= 0; i--) {
+    const event = events[i];
+    if (event.lv === 0 || (event.sub && !event.and)) continue;
+    event.countBeat = event.and ? AND_WORD : Math.round(event.t);
+    event.wordGap = nextWord - event.t;
+    nextWord = event.t;
+  }
+  return events;
 }
 
 /* ---------- транспорт ---------------------------------------------------- */
@@ -1189,7 +1268,13 @@ function scheduler() {
     if (tCtx > horizon) break;
     const e = cur.ev[cur.i];
     if (tCtx >= ctx.currentTime - .04 && songT >= -1e-9) {
-      click(tCtx, e.lv, e.countBeat, (e.wordGap ?? 1) * cur.bd / S.rate);
+      let voiceGap = (e.wordGap ?? 1) * cur.bd;
+      if (e.countBeat != null) {
+        const marker = cur.segs[cur.si + 1];
+        if (marker) voiceGap = Math.min(voiceGap, marker.t - songT);
+        if (S.loopOn && S.loopB != null) voiceGap = Math.min(voiceGap, S.loopB - songT);
+      }
+      click(tCtx, e.lv, e.countBeat, voiceGap / S.rate);
       visQ.push({ t: tCtx, songT, beat: Math.floor(e.t + 1e-9), bar: cur.bar, lv: e.lv, sub: e.sub,
                   pos: e.t, num: cur.seg.num });
     }
