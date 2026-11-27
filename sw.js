@@ -1,6 +1,6 @@
 /* Метроном «Твоя Сцена» — офлайн-кэш.
    При обновлении приложения поднимите номер версии на строчку ниже. */
-const VERSION = 'ts-metronom-v4';
+const VERSION = 'ts-metronom-v5';
 const ASSETS = [
   './',
   './index.html',
