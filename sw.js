@@ -1,6 +1,6 @@
 /* Метроном «Твоя Сцена» — офлайн-кэш.
    При обновлении приложения поднимите номер версии на строчку ниже. */
-const VERSION = 'ts-metronom-v2';
+const VERSION = 'ts-metronom-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -11,6 +11,8 @@ const ASSETS = [
   './icons/maskable-512.png',
   './icons/apple-touch-icon.png',
   './favicon.ico',
+  './voices/count-ru.m4a',
+  './voices/count-en.m4a',
 ];
 
 self.addEventListener('install', (e) => {

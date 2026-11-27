@@ -192,34 +192,21 @@ input[type=range]::-moz-range-thumb{
 .tap small{font-size:9.5px;font-weight:500;letter-spacing:.1em;color:var(--dim2);text-transform:uppercase}
 .tap:active small{color:#000}
 
-/* ---------- chips ---------- */
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{
-  padding:7px 12px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);
-  font-size:12.5px;font-weight:600;color:var(--dim);transition:.12s;white-space:nowrap;
-}
-.chip:hover{border-color:var(--line2);color:var(--txt)}
-.chip.on{background:var(--acc);border-color:var(--acc);color:#000}
-.chip small{display:block;font-size:9.5px;font-weight:500;opacity:.65;letter-spacing:.02em}
-.grp{margin-bottom:14px}
-.grp:last-child{margin-bottom:0}
-.grp-t{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:7px}
-
 /* ---------- rows ---------- */
 .row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .row:last-child{margin-bottom:0}
+.row[hidden]{display:none}
 .row .lbl{font-size:12.5px;color:var(--dim);min-width:104px;flex:none}
-.stepper{display:flex;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;overflow:hidden}
-.stepper button{width:32px;height:34px;color:var(--dim);font-size:17px;transition:.1s}
-.stepper button:hover{background:var(--panel3);color:var(--acc)}
-.stepper span{min-width:34px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
 .sel{
   background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;
   font-size:13px;font-weight:600;cursor:pointer;appearance:none;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%238b93a1'/></svg>");
   background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
 }
-.sel:focus{outline:none;border-color:var(--acc)}
+.sel:focus{outline:2px solid var(--acc);outline-offset:2px}
+.metro-settings{margin-top:14px}
+.metro-settings .sel,.setting-select{flex:1;min-width:0;max-width:100%}
+.metro-settings .rng-row{flex:1;min-width:0}
 .num{
   background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:92px;
   font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;
@@ -251,16 +238,6 @@ input[type=range]::-moz-range-thumb{
 .wave-wrap{position:relative;border-radius:var(--r-s);overflow:hidden;background:#0b0c0f;border:1px solid var(--line);height:132px;cursor:crosshair;touch-action:none}
 #wave{position:absolute;inset:0;width:100%;height:100%;display:block}
 .wave-cap{font-size:10.5px;color:var(--dim2);margin-top:7px;line-height:1.5}
-/* ---------- звук у метронома ---------- */
-.snd-row{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
-.snd-row .snd-lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-right:4px;flex:none}
-.snd{
-  padding:7px 12px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);
-  font-size:12.5px;font-weight:600;color:var(--dim);transition:.12s;white-space:nowrap;
-}
-.snd:hover{border-color:var(--line2);color:var(--txt)}
-.snd.on{background:var(--acc);border-color:var(--acc);color:#000}
-
 /* ---------- транспорт трека ---------- */
 .trk-bar{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
 .tb{
@@ -280,12 +257,6 @@ input[type=range]::-moz-range-thumb{
 .modes button.on{background:var(--acc);color:#000}
 
 /* ---------- нотные значки ---------- */
-.chip.gl{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 13px 7px;min-width:56px}
-.chip.gl .glyph{display:flex;align-items:center;justify-content:center;min-height:34px}
-.chip.gl .glyph svg{height:34px;width:auto;display:block}
-.chip.gl .glyph svg.tall{height:48px}
-.chip.gl small{font-size:10px;font-weight:600;opacity:.6;letter-spacing:.01em;line-height:1.2;text-align:center}
-.chip.gl.on small{opacity:.75}
 .figlabel{display:flex;align-items:center;gap:7px}
 .figlabel .glyph svg{height:22px;width:auto;display:block;vertical-align:middle}
 
@@ -362,7 +333,7 @@ input[type=range]::-moz-range-thumb{
 .trk-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .time{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--dim);letter-spacing:.02em}
 
-.mixer{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.mixer{margin-top:14px}
 .ch{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-s);padding:12px}
 .ch-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
 .ch-h b{font-size:12px;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:7px}
@@ -506,13 +477,31 @@ input[type=range]::-moz-range-thumb{
           <button class="tap" id="tapBtn">ТАП<small id="tapInfo">темп</small></button>
         </div>
 
-        <div class="snd-row" id="sndRow">
-          <span class="snd-lbl">Звук</span>
-          <button class="snd" data-s="wood">Дерево</button>
-          <button class="snd" data-s="click">Щелчок</button>
-          <button class="snd" data-s="classic">Классика</button>
-          <button class="snd" data-s="electro">Электро</button>
-          <button class="snd" data-s="rim">Рим-шот</button>
+        <div class="metro-settings">
+          <div class="row">
+            <label class="lbl" for="soundSel">Звук</label>
+            <select class="sel" id="soundSel">
+              <optgroup label="Щелчки">
+                <option value="wood">Дерево</option>
+                <option value="click">Щелчок</option>
+                <option value="classic">Классика</option>
+                <option value="electro">Электро</option>
+                <option value="rim">Рим-шот</option>
+              </optgroup>
+              <optgroup label="Женский голос">
+                <option value="voice-ru">Раз, два, три, че</option>
+                <option value="voice-en">One, two, three, four</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="row ch">
+            <label class="lbl" for="volMet">Громкость</label>
+            <div class="rng-row">
+              <input type="range" id="volMet" min="0" max="100" value="85">
+              <small class="r" id="volMetV">85%</small>
+            </div>
+            <button class="mute" id="muteMet" aria-label="Выключить звук метронома" aria-pressed="false">MUTE</button>
+          </div>
         </div>
       </div>
 
@@ -569,13 +558,6 @@ input[type=range]::-moz-range-thumb{
           </div>
 
           <div class="mixer">
-            <div class="ch">
-              <div class="ch-h">
-                <b><i class="dot" style="background:var(--acc)"></i>Метроном</b>
-                <button class="mute" id="muteMet">MUTE</button>
-              </div>
-              <div class="rng-row"><input type="range" id="volMet" min="0" max="100" value="75"><small class="r" id="volMetV">75</small></div>
-            </div>
             <div class="ch">
               <div class="ch-h">
                 <b><i class="dot" style="background:var(--blu)"></i>Песня</b>
@@ -653,18 +635,20 @@ input[type=range]::-moz-range-thumb{
       <div class="card" id="cSize">
         <h2>Размер и акценты</h2>
         <div class="row">
-          <span class="lbl">Размер такта</span>
-          <div class="stepper">
-            <button id="numDown">−</button><span id="numVal">4</span><button id="numUp">+</button>
-          </div>
-          <span style="color:var(--dim2);font-size:18px;font-weight:300">/</span>
-          <select class="sel" id="denSel">
-            <option>1</option><option>2</option><option selected>4</option><option>8</option><option>16</option>
+          <label class="lbl" for="tsSel">Размер такта</label>
+          <select class="sel setting-select" id="tsSel">
+            <option>4/4</option><option>3/4</option><option>2/4</option><option>6/8</option>
+            <option>12/8</option><option>5/4</option><option>7/8</option><option>9/8</option>
+            <option value="custom">Свой размер</option>
           </select>
         </div>
-        <div class="row">
-          <span class="lbl">Быстрый выбор</span>
-          <div class="chips" id="tsChips"></div>
+        <div class="row" id="customTS" hidden>
+          <label class="lbl" for="numSel">Свой размер</label>
+          <select class="sel" id="numSel" aria-label="Число долей"></select>
+          <span aria-hidden="true">/</span>
+          <select class="sel" id="denSel" aria-label="Длительность доли">
+            <option>1</option><option>2</option><option selected>4</option><option>8</option><option>16</option>
+          </select>
         </div>
         <div class="row">
           <span class="lbl">Акценты</span>
@@ -675,7 +659,10 @@ input[type=range]::-moz-range-thumb{
 
       <div class="card" id="cFig">
         <h2>Длительности и ритмические фигуры</h2>
-        <div id="patGroups"></div>
+        <div class="row">
+          <label class="lbl" for="patSel">Ритм</label>
+          <select class="sel setting-select" id="patSel"></select>
+        </div>
         <div class="row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
           <span class="lbl">Свинг</span>
           <div class="rng-row" style="flex:1">
@@ -972,7 +959,7 @@ const tempoName = (b) => { let n = 'Grave'; for (const [v, s] of TEMPO_NAMES) if
 const S = {
   bpm: 100, num: 4, den: 4, pat: 'q', swing: 0,
   accents: [2, 1, 1, 1],
-  sound: 'wood', subVol: .55, volMet: .75, volTrk: .85,
+  sound: 'wood', subVol: .55, volMet: .85, volTrk: .85,
   muteMet: false, muteTrk: false,
   playing: false, view: 'circle',
   offset: 0, rate: 1,
@@ -982,13 +969,31 @@ const S = {
 };
 
 /* ---------- аудио -------------------------------------------------------- */
-let ctx = null, gMet = null, gTrk = null, noiseBuf = null, srcNode = null;
+let ctx = null, gMet = null, gTrk = null, clickBus = null, noiseBuf = null, srcNode = null;
+// Русский голос: Silero V5 CIS Base (ru_vika), https://github.com/snakers4/silero-models
+// Английский голос: Piper LJSpeech, https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/ljspeech/medium
+const voiceFiles = { 'voice-ru': 'count-ru.m4a', 'voice-en': 'count-en.m4a' };
+const voiceBuffers = new Map();
+const VOICE_SLOT = .64;
 
 function initAudio() {
   if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return ctx; }
   ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
-  gMet = ctx.createGain(); gMet.gain.value = S.muteMet ? 0 : S.volMet; gMet.connect(ctx.destination);
-  gTrk = ctx.createGain(); gTrk.gain.value = S.muteTrk ? 0 : S.volTrk; gTrk.connect(ctx.destination);
+  const limiter = ctx.createDynamicsCompressor();
+  limiter.threshold.value = -5;
+  limiter.knee.value = 3;
+  limiter.ratio.value = 16;
+  limiter.attack.value = .001;
+  limiter.release.value = .05;
+  limiter.connect(ctx.destination);
+
+  gMet = ctx.createGain();
+  gMet.gain.value = S.muteMet ? 0 : S.volMet;
+  gMet.connect(limiter);
+  gTrk = ctx.createGain();
+  gTrk.gain.value = S.muteTrk ? 0 : S.volTrk;
+  gTrk.connect(limiter);
+  resetClickBus();
   const n = ctx.sampleRate * .4 | 0;
   noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0);
@@ -996,15 +1001,51 @@ function initAudio() {
   return ctx;
 }
 
+function resetClickBus() {
+  if (!ctx) return;
+  if (clickBus) clickBus.disconnect();
+  clickBus = ctx.createGain();
+  clickBus.connect(gMet);
+}
+
+async function loadVoice(kind) {
+  if (voiceBuffers.has(kind)) return;
+  const response = await fetch('voices/' + voiceFiles[kind]);
+  if (!response.ok) throw new Error('Не удалось загрузить голосовой счёт');
+  voiceBuffers.set(kind, await ctx.decodeAudioData(await response.arrayBuffer()));
+}
+
+function speakBeat(time, level, beat, beatSec) {
+  const source = ctx.createBufferSource();
+  source.buffer = voiceBuffers.get(S.sound);
+  const wordLength = .5;
+  const rate = clamp(wordLength / (beatSec * .95), 1, 2.6);
+  const duration = Math.min(wordLength / rate, beatSec * .95);
+  const env = ctx.createGain();
+  const gain = level === 3 ? 1.15 : 1;
+  env.gain.setValueAtTime(gain, time);
+  env.gain.setValueAtTime(gain, time + duration - .008);
+  env.gain.linearRampToValueAtTime(0, time + duration);
+  source.playbackRate.value = rate;
+  source.connect(env).connect(clickBus);
+  source.start(time, beat * VOICE_SLOT, duration * rate);
+}
+
 /* level: 3 акцент, 2 доля, 1 слабая */
-function click(time, level) {
+function click(time, level, countBeat = null, beatSec = .64) {
   if (!ctx || level < 1) return;
-  const kind = S.sound;
+  const t = Math.max(time, ctx.currentTime);
+  if (countBeat != null && voiceBuffers.has(S.sound)) {
+    speakBeat(t, level, countBeat, beatSec);
+    return;
+  }
+  const kind = voiceFiles[S.sound] ? 'wood' : S.sound;
   const amp = level === 3 ? 1 : level === 2 ? .62 : .62 * S.subVol;
   if (amp <= 0.0005) return;
-  const t = Math.max(time, ctx.currentTime);
-
-  const env = ctx.createGain(); env.connect(gMet);
+  const env = ctx.createGain();
+  const boost = ctx.createGain();
+  boost.gain.value = kind === 'click' ? 2.4 : 2.15;
+  env.connect(boost).connect(clickBus);
 
   if (kind === 'classic' || kind === 'electro') {
     const o = ctx.createOscillator();
@@ -1053,8 +1094,13 @@ function click(time, level) {
    первый сегмент начинается в S.offset, дальше — пользовательские метки   */
 function segments() {
   const base = { t: S.offset, bpm: S.bpm, num: S.num, den: S.den, pat: S.pat, swing: S.swing };
-  const ms = S.markers.slice().sort((a, b) => a.t - b.t).filter(m => m.t > S.offset + 1e-6);
-  return [base].concat(ms);
+  const markers = S.markers.filter(m => m.t > S.offset + 1e-6);
+  if (loopDownbeat === S.loopA && loopDownbeat != null && S.loopOn) {
+    if (loopDownbeat <= base.t) base.t = loopDownbeat;
+    else markers.push({ ...base, t: loopDownbeat });
+  }
+  markers.sort((a, b) => a.t - b.t);
+  return [base, ...markers];
 }
 /* Темп всегда указывается в четвертях (♩ = X).
    Нижняя цифра размера задаёт, какой нотой щёлкает метроном:
@@ -1097,10 +1143,24 @@ function barEvents(seg) {
   return out;
 }
 
+function playbackEvents(seg) {
+  const events = barEvents(seg);
+  if (!voiceBuffers.has(S.sound)) {
+    if (events[0].t > 0) events.unshift({ t: 0, lv: 0, sub: false });
+    return events;
+  }
+  const subdivisions = events.filter(e => e.sub);
+  for (let beat = 0; beat < seg.num; beat++) {
+    const accent = S.accents[beat];
+    subdivisions.push({ t: beat, lv: accent === 0 ? 0 : accent === 2 ? 3 : 2, sub: false, countBeat: beat });
+  }
+  return subdivisions.sort((a, b) => a.t - b.t);
+}
+
 /* ---------- транспорт ---------------------------------------------------- */
 const LOOKAHEAD = .12, TICK = 20;
 let epochCtx = 0, epochSong = 0;       // отображение времени песни <-> времени AudioContext
-let timerId = null, cur = null, visQ = [], rafId = null;
+let timerId = null, cur = null, visQ = [], rafId = null, loopDownbeat = null;
 
 const songNow = () => S.playing ? epochSong + (ctx.currentTime - epochCtx) * S.rate : S.pos;
 const ctxAt = (songT) => epochCtx + (songT - epochSong) / S.rate;
@@ -1113,9 +1173,9 @@ function makeCursor(fromSong) {
   const seg = segs[si];
   const bd = beatDur(seg);
   const barLen = seg.num * bd;
-  let k = Math.floor((fromSong - seg.t) / barLen);
+  let k = Math.floor((fromSong - seg.t + 1e-9) / barLen);
   if (k < 0) k = 0;
-  const c = { si, segs, seg, bd, barLen, barStart: seg.t + k * barLen, bar: k + 1, ev: barEvents(seg), i: 0 };
+  const c = { si, segs, seg, bd, barLen, barStart: seg.t + k * barLen, bar: k + 1, ev: playbackEvents(seg), i: 0 };
   if (fromSong < seg.t) { c.barStart = seg.t; c.bar = 1; }
   // подвинуть индекс к первому событию не раньше fromSong
   buildingCursor = true;
@@ -1136,7 +1196,7 @@ function step(c) {
   const t = c.barStart + c.ev[c.i].t * c.bd;
   if (nx && t >= nx.t - 1e-9) {
     c.si++; c.seg = nx; c.bd = beatDur(nx); c.barLen = nx.num * c.bd;
-    c.barStart = nx.t; c.bar = 1; c.ev = barEvents(nx); c.i = 0;
+    c.barStart = nx.t; c.bar = 1; c.ev = playbackEvents(nx); c.i = 0;
     syncFromSegment(nx);
   }
   return true;
@@ -1171,7 +1231,7 @@ function scheduler() {
     if (tCtx > horizon) break;
     const e = cur.ev[cur.i];
     if (tCtx >= ctx.currentTime - .04 && songT >= -1e-9) {
-      click(tCtx, e.lv);
+      click(tCtx, e.lv, e.countBeat, cur.bd / S.rate);
       visQ.push({ t: tCtx, songT, beat: Math.floor(e.t + 1e-9), bar: cur.bar, lv: e.lv, sub: e.sub,
                   pos: e.t, num: cur.seg.num });
     }
@@ -1210,6 +1270,7 @@ function play() {
   if (S.loopOn && S.loopA != null && S.loopB != null && (pos < S.loopA - 1e-6 || pos >= S.loopB)) pos = S.loopA;
   if (S.buffer && pos >= S.buffer.duration - .02) pos = 0;
   S.playing = true;
+  resetClickBus();
   epochCtx = ctx.currentTime + .06;
   epochSong = pos;
   cur = makeCursor(pos);
@@ -1226,6 +1287,8 @@ function stop() {
   S.playing = false;
   clearInterval(timerId); timerId = null;
   stopAudioNode();
+  resetClickBus();
+  loopDownbeat = null;
   visQ = [];
   paintPlay();
   clearHits();
@@ -1238,20 +1301,53 @@ function reanchor(newSongPos) {
   // перезапустить всё с новой позиции без прерывания UI
   if (!S.playing) { S.pos = newSongPos; drawWave(); updateTime(); return; }
   const t = ctx.currentTime + .05;
+  resetClickBus();
   epochCtx = t; epochSong = newSongPos;
   cur = makeCursor(newSongPos);
   visQ = [];
-  restartAudioAt(t, newSongPos);
+  startAudioAt(t, newSongPos);
+  scheduler();
 }
+
+function restartFromDownbeat() {
+  if (!S.playing) {
+    if (!S.buffer) updateTime();
+    return;
+  }
+  const now = Math.max(0, songNow());
+  const p = positionAt(now);
+  let downbeat = S.buffer ? p.seg.t + Math.max(0, p.bar - 1) * p.barLen : 0;
+  if (S.loopOn && S.loopA != null && S.loopB != null &&
+      (downbeat < S.loopA - 1e-6 || downbeat >= S.loopB)) {
+    const loopPosition = positionAt(S.loopA);
+    const rel = Math.max(0, S.loopA - loopPosition.seg.t);
+    const nextBar = loopPosition.seg.t + Math.ceil((rel - 1e-9) / loopPosition.barLen) * loopPosition.barLen;
+    const nextMarker = segments()[loopPosition.si + 1];
+    downbeat = Math.min(nextBar, nextMarker ? nextMarker.t : Infinity);
+    if (downbeat >= S.loopB) {
+      // В короткой петле без тактовой черты её начало становится первой долей.
+      loopDownbeat = S.loopA;
+      downbeat = S.loopA;
+    }
+  }
+  clearHits();
+  lastSubKey = '';
+  const bar = positionAt(downbeat).bar;
+  $('#cBar').textContent = bar;
+  $('#cBeat').textContent = '1';
+  reanchor(downbeat);
+}
+
 function retempo() {
   // темп/размер поменяли на ходу — сохраняем фазу внутри такта
   if (!S.playing || !cur) return;
   const now = songNow();
+  resetClickBus();
   const phase = (now - cur.barStart) / cur.bd;
   const segs = segments(); const seg = segs[cur.si] || segs[0];
   const bd = beatDur(seg);
   const c = { si: cur.si, segs, seg, bd, barLen: seg.num * bd,
-              barStart: now - phase * bd, bar: cur.bar, ev: barEvents(seg), i: 0 };
+              barStart: now - phase * bd, bar: cur.bar, ev: playbackEvents(seg), i: 0 };
   while (c.barStart + c.ev[c.i].t * c.bd < now - 1e-9) { if (!step(c)) break; }
   cur = c;
   visQ = visQ.filter(v => v.t <= ctx.currentTime);
@@ -1280,15 +1376,16 @@ function positionAt(songT) {
   const seg = segs[si], bd = beatDur(seg), barLen = seg.num * bd;
   if (songT < seg.t) return { seg, si, bar: 0, beats: 0, barFrac: 0, before: true, bd, barLen };
   const rel = songT - seg.t;
-  const bar = Math.floor(rel / barLen);
-  const inBar = rel - bar * barLen;
+  const bar = Math.floor((rel + 1e-9) / barLen);
+  const inBar = Math.max(0, rel - bar * barLen);
   return { seg, si, bar: bar + 1, beats: inBar / bd, barFrac: inBar / barLen, before: false, bd, barLen };
 }
 
 /* ---------- пульсы ------------------------------------------------------- */
-let pulse = 0, pulseLv = 2, ripples = [], lastBeatShown = -1, lastBarShown = -1;
+let pulse = 0, pulseLv = 2, ripples = [], lastBeatShown = -1, lastBarShown = -1, lampHitTimer;
 
 function clearHits() {
+  clearTimeout(lampHitTimer);
   pulse = 0; ripples = [];
   $$('#lampRow .lamp').forEach(l => l.classList.remove('hit'));
   $$('#subDots .subdot').forEach(d => d.classList.remove('hit'));
@@ -1319,14 +1416,15 @@ function loopRAF() {
 
 function onHit(e) {
   if (e.lv >= 2) { pulse = e.lv === 3 ? 1.15 : .8; pulseLv = e.lv; }
-  else { pulse = Math.max(pulse, .35); pulseLv = 1; }
-  ripples.push({ a: 1, lv: e.lv });
+  else if (e.lv === 1) { pulse = Math.max(pulse, .35); pulseLv = 1; }
+  if (e.lv > 0) ripples.push({ a: 1, lv: e.lv });
   const beat = e.beat;
   const lamps = $$('#lampRow .lamp');
-  if (!e.sub && lamps[beat]) {
+  if (!e.sub && e.lv > 0 && lamps[beat]) {
     lamps.forEach(l => l.classList.remove('hit'));
     lamps[beat].classList.add('hit');
-    setTimeout(() => lamps[beat] && lamps[beat].classList.remove('hit'), Math.min(220, beatSecOf(S.bpm, S.den) * 700));
+    clearTimeout(lampHitTimer);
+    lampHitTimer = setTimeout(() => lamps[beat].classList.remove('hit'), Math.min(220, beatSecOf(S.bpm, S.den) * 700));
   }
   const cells = $$('#accStrip .acc-cell');
   if (!e.sub && cells[beat]) { cells.forEach(c => c.classList.remove('now')); cells[beat].classList.add('now'); }
@@ -2285,8 +2383,8 @@ let tapSync = null;
 function startTapSync() {
   if (!S.buffer) { toast('Сначала загрузи песню'); return; }
   initAudio();
-  tapSync = { taps: [], wasMute: S.muteMet };
-  if (gMet) gMet.gain.value = 0;
+  tapSync = { taps: [] };
+  updateMetroGain();
   if (!S.playing) play();
   paintTapSync();
 }
@@ -2341,18 +2439,16 @@ function paintTapSync() {
 }
 function cancelTapSync() {
   if (!tapSync) return;
-  const wasMute = tapSync.wasMute;
   tapSync = null;
-  if (gMet) gMet.gain.value = wasMute ? 0 : S.volMet;
+  updateMetroGain();
   paintTapSync();
   toast('Простукивание отменено');
 }
 function finishTapSync() {
   if (!tapSync) return;
   const f = tapFit();
-  const wasMute = tapSync.wasMute;
   tapSync = null;
-  if (gMet) gMet.gain.value = wasMute ? 0 : S.volMet;
+  updateMetroGain();
   paintTapSync();
   if (!f) { toast('Мало ударов — нужно хотя бы четыре'); return; }
   prepareOnsets();
@@ -2542,12 +2638,16 @@ function syncControls() {
     (S.den === 4 ? '' : ' · доля = ' + (unit || 'доля').toLowerCase() +
       ', ' + cpm + ' ' + plural(cpm, 'клик', 'клика', 'кликов') + ' в минуту');
   $('#bpmLbl').textContent = S.den === 4 ? 'удар/мин' : 'четвертей в минуту (♩)';
-  $('#numVal').textContent = S.num;
+  $('#numSel').value = String(S.num);
   $('#denSel').value = String(S.den);
+  const size = S.num + '/' + S.den;
+  const sizeSelect = $('#tsSel');
+  const preset = Array.from(sizeSelect.options).some(option => option.value === size);
+  sizeSelect.value = preset && !showCustomSize ? size : 'custom';
+  $('#customTS').hidden = sizeSelect.value !== 'custom';
   const _p = PATS[S.pat] || PATS.q;
   $('#figLabel').innerHTML = '<span class="glyph">' + patGlyph(_p, S.den) + '</span>' + patName(_p, S.den);
-  $$('#patGroups .chip').forEach(c => c.classList.toggle('on', c.dataset.p === S.pat));
-  $$('#tsChips .chip').forEach(c => c.classList.toggle('on', c.dataset.ts === S.num + '/' + S.den));
+  syncRhythmSelect();
   $('#swing').value = S.swing; $('#swingV').textContent = S.swing + '%';
 }
 function paintPlay() {
@@ -2557,45 +2657,26 @@ function paintPlay() {
   $('#playIcon').innerHTML = on ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
 }
 
-/* ---------- чипы --------------------------------------------------------- */
-function buildPatChips() {
-  const box = $('#patGroups');
-  box.innerHTML = '';
-  GROUPS.forEach(g => {
-    const w = document.createElement('div'); w.className = 'grp';
-    const t = document.createElement('div'); t.className = 'grp-t'; t.textContent = g.title;
-    const c = document.createElement('div'); c.className = 'chips';
-    g.items.forEach(p => {
-      const b = document.createElement('button');
-      b.className = 'chip gl'; b.dataset.p = p.id;
-      b.title = patName(p, S.den) + ' — ' + patSub(p, S.den);
-      b.innerHTML = '<span class="glyph">' + patGlyph(p, S.den) + '</span><small>' + patName(p, S.den) + '</small>';
-      b.onclick = () => {
-        S.pat = p.id; syncControls(); lastSubKey = '';
-        if (S.playing) retempo();
-        if (S.buffer) { drawWave(); drawZoom(); }
-      };
-      c.appendChild(b);
+/* ---------- выпадающие списки -------------------------------------------- */
+let showCustomSize = false, rhythmDen = null;
+const numSelect = $('#numSel');
+for (let num = 1; num <= 16; num++) numSelect.add(new Option(num, num));
+
+function syncRhythmSelect() {
+  const select = $('#patSel');
+  if (rhythmDen !== S.den) {
+    rhythmDen = S.den;
+    select.replaceChildren();
+    GROUPS.forEach(group => {
+      const options = document.createElement('optgroup');
+      options.label = group.title;
+      group.items.forEach(p => options.appendChild(new Option(patName(p, S.den) + ' · ' + patSub(p, S.den), p.id)));
+      select.appendChild(options);
     });
-    w.appendChild(t); w.appendChild(c); box.appendChild(w);
-  });
-  $$('#patGroups .chip').forEach(c => c.classList.toggle('on', c.dataset.p === S.pat));
+  }
+  select.value = S.pat;
 }
-(function buildChips() {
-  buildPatChips();
-  const ts = $('#tsChips');
-  ['4/4', '3/4', '2/4', '6/8', '12/8', '5/4', '7/8', '9/8'].forEach(s => {
-    const b = document.createElement('button');
-    b.className = 'chip'; b.dataset.ts = s; b.textContent = s;
-    b.onclick = () => {
-      const [n, d] = s.split('/').map(Number);
-      S.num = n; S.den = d;
-      S.accents = defaultAccents(n, d);
-      afterTS();
-    };
-    ts.appendChild(b);
-  });
-})();
+
 function defaultAccents(n, d) {
   const a = new Array(n).fill(1);
   a[0] = 2;
@@ -2606,8 +2687,8 @@ function defaultAccents(n, d) {
   return a;
 }
 function afterTS() {
-  fixAccents(); buildLamps(); buildAccStrip(); buildPatChips(); syncControls(); lastSubKey = '';
-  if (S.playing) retempo();
+  fixAccents(); buildLamps(); buildAccStrip(); syncControls(); lastSubKey = '';
+  restartFromDownbeat();
   if (S.buffer) { drawWave(); drawZoom(); updateSyncState(); }
 }
 
@@ -2620,42 +2701,87 @@ $('#bpmInput').onchange = (e) => setBPM(parseFloat(String(e.target.value).replac
 $('#bpmInput').onblur = () => syncControls();
 $('#bpmInput').onkeydown = (e) => { if (e.key === 'Enter') { e.target.blur(); } };
 
-$('#numUp').onclick = () => { S.num = clamp(S.num + 1, 1, 16); S.accents = fitAcc(S.accents, S.num); afterTS(); };
-$('#numDown').onclick = () => { S.num = clamp(S.num - 1, 1, 16); S.accents = fitAcc(S.accents, S.num); afterTS(); };
+$('#tsSel').onchange = (e) => {
+  showCustomSize = e.target.value === 'custom';
+  if (showCustomSize) { syncControls(); return; }
+  const [num, den] = e.target.value.split('/').map(Number);
+  if (num === S.num && den === S.den) return;
+  S.num = num; S.den = den;
+  S.accents = defaultAccents(num, den);
+  afterTS();
+};
+$('#numSel').onchange = (e) => { S.num = +e.target.value; S.accents = fitAcc(S.accents, S.num); afterTS(); };
 $('#denSel').onchange = (e) => { S.den = +e.target.value; afterTS(); };
+$('#patSel').onchange = (e) => {
+  S.pat = e.target.value;
+  syncControls();
+  lastSubKey = '';
+  restartFromDownbeat();
+  if (S.buffer) { drawWave(); drawZoom(); }
+};
 function fitAcc(a, n) { const r = a.slice(0, n); while (r.length < n) r.push(1); r[0] = r[0] || 2; return r; }
 
 $('#swing').oninput = (e) => {
   S.swing = +e.target.value; $('#swingV').textContent = S.swing + '%';
   lastSubKey = ''; if (S.playing) retempo();
 };
-function paintSnd() {
-  $$('#sndRow .snd').forEach(b => b.classList.toggle('on', b.dataset.s === S.sound));
-}
-$('#sndRow').onclick = (e) => {
-  const b = e.target.closest('.snd'); if (!b) return;
-  S.sound = b.dataset.s;
-  paintSnd();
+let soundRequest = 0;
+$('#soundSel').onchange = async (e) => {
+  const kind = e.target.value;
+  const request = ++soundRequest;
   initAudio();
+  if (voiceFiles[kind]) {
+    try {
+      await loadVoice(kind);
+    } catch (err) {
+      if (request !== soundRequest) return;
+      e.target.value = S.sound;
+      toast('Голосовой счёт не загрузился. Попробуй выбрать его ещё раз.');
+      return;
+    }
+  }
+  if (request !== soundRequest || kind === S.sound) return;
+  S.sound = kind;
+  if (S.playing) {
+    restartFromDownbeat();
+    return;
+  }
+  resetClickBus();
   const t = ctx.currentTime + .04;
-  if (S.playing) return;                       // на ходу не мешаем — просто меняем тембр
-  click(t, 3); click(t + .22, 2); click(t + .44, 1); click(t + .66, 2);
+  if (voiceFiles[kind]) {
+    for (let beat = 0; beat < 4; beat++) click(t + beat * .56, beat === 0 ? 3 : 2, beat, .56);
+  } else {
+    click(t, 3); click(t + .22, 2); click(t + .44, 1); click(t + .66, 2);
+  }
 };
 $('#subVol').oninput = (e) => { S.subVol = +e.target.value / 100; $('#subVolV').textContent = e.target.value; };
 
-$('#volMet').oninput = (e) => { S.volMet = +e.target.value / 100; $('#volMetV').textContent = e.target.value; if (gMet && !S.muteMet) gMet.gain.value = S.volMet; };
+function updateMetroGain() {
+  if (gMet) gMet.gain.value = S.muteMet || tapSync ? 0 : S.volMet;
+}
+$('#volMet').oninput = (e) => {
+  S.volMet = +e.target.value / 100;
+  $('#volMetV').textContent = e.target.value + '%';
+  updateMetroGain();
+};
 $('#volTrk').oninput = (e) => { S.volTrk = +e.target.value / 100; $('#volTrkV').textContent = e.target.value; if (gTrk && !S.muteTrk) gTrk.gain.value = S.volTrk; };
-$('#muteMet').onclick = (e) => { S.muteMet = !S.muteMet; e.target.classList.toggle('on', S.muteMet); if (gMet) gMet.gain.value = S.muteMet ? 0 : S.volMet; };
+$('#muteMet').onclick = (e) => {
+  S.muteMet = !S.muteMet;
+  e.currentTarget.classList.toggle('on', S.muteMet);
+  e.currentTarget.setAttribute('aria-pressed', S.muteMet);
+  updateMetroGain();
+};
 $('#muteTrk').onclick = (e) => { S.muteTrk = !S.muteTrk; e.target.classList.toggle('on', S.muteTrk); if (gTrk) gTrk.gain.value = S.muteTrk ? 0 : S.volTrk; };
 
 $('#viewTabs').onclick = (e) => {
-  const b = e.target.closest('button'); if (!b) return;
+  const b = e.target.closest('button'); if (!b || b.dataset.v === S.view) return;
   S.view = b.dataset.v;
   $$('#viewTabs button').forEach(x => x.classList.toggle('on', x === b));
   $('#vCircle').classList.toggle('on', S.view === 'circle');
   $('#vLamps').classList.toggle('on', S.view === 'lamps');
   $('#vGrid').classList.toggle('on', S.view === 'grid');
   lastSubKey = '';
+  restartFromDownbeat();
 };
 
 /* tap tempo */
@@ -2750,7 +2876,8 @@ $('#rate').oninput = (e) => {
 /* клавиатура */
 document.addEventListener('keydown', (e) => {
   const tag = (e.target.tagName || '').toLowerCase();
-  if (tag === 'input' || tag === 'select' || tag === 'textarea') {
+  if (tag === 'select') return;
+  if (tag === 'input' || tag === 'textarea') {
     if (e.key === 'Escape') e.target.blur();
     return;
   }
@@ -2778,7 +2905,7 @@ window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() =
 /* ---------- старт -------------------------------------------------------- */
 S.accents = defaultAccents(S.num, S.den);
 buildLamps(); buildAccStrip(); syncControls(); paintPlay(); updateLoopUI();
-setSyncEnabled(false); updateSyncState(); paintTapSync(); paintSnd(); paintWaveMode();
+setSyncEnabled(false); updateSyncState(); paintTapSync(); paintWaveMode();
 buildSubDots(0, segments()[0]);
 loopRAF();
 render();
